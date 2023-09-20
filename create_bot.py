@@ -1,6 +1,5 @@
 from langchain.document_loaders import WebBaseLoader
 from langchain.document_loaders import PyPDFLoader
-from langchain.document_loaders.image import UnstructuredImageLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
@@ -15,7 +14,9 @@ from langchain.prompts.chat import (
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from langchain.memory import ConversationSummaryMemory
 from langchain.chains import ConversationalRetrievalChain
+from langchain.chains import RetrievalQAWithSourcesChain
 
+import json
 # create a new instance of chatbot and saves it as a JSON file
 def createNewBot(name, fileType, path, url):
 	loader = None
@@ -24,8 +25,6 @@ def createNewBot(name, fileType, path, url):
 		loader = WebBaseLoader(url)
 	elif fileType == 'doc':
 		loader = PyPDFLoader(path)
-	elif fileType == 'img':
-		loader = UnstructuredImageLoader(path)
 
 	data = loader.load()
 
@@ -39,7 +38,7 @@ def createNewBot(name, fileType, path, url):
 	jina_api_key = os.environ['JINA_API_KEY']
 	chat = JinaChat(temperature=0, jinachat_api_key=jina_api_key)
 
-	memory = ConversationSummaryMemory(llm=chat,memory_key="chat_history",return_messages=True)
+	# memory = ConversationSummaryMemory(llm=chat,memory_key="chat_history",return_messages=True)
 
 	retriever = vectorstore.as_retriever()
 
@@ -57,9 +56,10 @@ def createNewBot(name, fileType, path, url):
     [system_message_prompt, human_message_prompt]
 	)
 
-	finalChain = ConversationalRetrievalChain.from_llm(chat, retriever=retriever, memory = memory, combine_docs_chain_kwargs={'prompt': chat_prompt})
-	
+	# finalChain = ConversationalRetrievalChain.from_llm(chat, retriever=retriever, memory = memory, combine_docs_chain_kwargs={'prompt': chat_prompt})
+	finalChain = RetrievalQAWithSourcesChain.from_chain_type(chat, retriever=retriever)
+
+	botSavePath = "bots/" + name + '.json'	
+	finalChain.save(botSavePath)
+
 	return finalChain
-	# SAVING DOESNT WORK OUT BECAUSE LANGCHAIN HAS YET TO SUPPORT THIS
-	# botSavePath = "bots/" + name + '.json'
-	# qa.save(botSavePath)

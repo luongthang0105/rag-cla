@@ -10,7 +10,7 @@ def validateUrl(url):
 	return False
 
 def validUrlOrPath(fileType, path, url):
-	if fileType in ['doc', 'img']:
+	if fileType in ['doc']:
 		if path == None:
 			raise click.UsageError(message = "Valid path should be provided for document/image")
 		else:
@@ -26,7 +26,6 @@ def validUrlOrPath(fileType, path, url):
 
 INPUT_TYPES = {
 	"doc": "pdf",
-	"img": "png",
 	"web": "url"
 }
 
@@ -52,16 +51,19 @@ def newBot(name, fileType, path, url):
 
 	print(f'Bot "{name}" created successfully!')
 
-	print(f'Ask chatbot {name} something or press ESC to end session: ')
+	print(f'Ask chatbot {name} something or type "esc" to end session: ')
 
-	while not keyboard.is_pressed('esc'):
+	while True:
 		query = input()
-	
+		if query == 'esc': break
+		print()
 		print(f"Waiting for chatbot's response...")
+		# response = chatBot.run(query)
+		# print(f"""Response: {response['answer']}""")
 		answer = chatBot(query)['answer']
-
-		print(f"""Response: {answer}""")
+		print(f"""{answer}""")
 
 		print(f"Your next query: ")
 
+	print('Conversation ended!')
 
