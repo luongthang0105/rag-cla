@@ -4,9 +4,9 @@ option:
 --inputType "choice of pdf/png/web"
 --source "path to file"
 
-function: botInfo - tells users about info of the bot (error handling given name doesnt exist nha)
+function: botInfo - tells users about info of the bots (error handling given name doesnt exist nha)
 option:
---name "bot name"
+
 
 function: useBot - use the bot with the given name (error handling when given name doesnt exist nha)
 option:

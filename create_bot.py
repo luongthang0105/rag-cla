@@ -8,13 +8,11 @@ from langchain.chat_models import JinaChat
 from langchain.prompts.chat import (
     ChatPromptTemplate,
     SystemMessagePromptTemplate,
-    AIMessagePromptTemplate,
     HumanMessagePromptTemplate,
 )
-from langchain.schema import AIMessage, HumanMessage, SystemMessage
-from langchain.memory import ConversationSummaryMemory
-from langchain.chains import ConversationalRetrievalChain
 from langchain.chains import RetrievalQAWithSourcesChain
+from langchain.chat_models import ChatAnyscale
+from langchain.llms import AI21
 
 import json
 # create a new instance of chatbot and saves it as a JSON file
@@ -33,11 +31,14 @@ def createNewBot(name, fileType, path, url):
 	
 	embeddings = HuggingFaceEmbeddings()
 
-	vectorstore = Chroma.from_documents(documents=all_splits, embedding=embeddings)
+	persistentDir = "bots/" + name + "/vectorstore/" 
+	vectorstore = Chroma.from_documents(documents=all_splits, embedding=embeddings, persist_directory=persistentDir)
+	# print(vectorstore)
+	# jina_api_key = os.environ['JINA_API_KEY']
+	# chat = JinaChat(temperature=0, jinachat_api_key=jina_api_key)
 
-	jina_api_key = os.environ['JINA_API_KEY']
-	chat = JinaChat(temperature=0, jinachat_api_key=jina_api_key)
-
+	# chat = ChatAnyscale(model_name='meta-llama/Llama-2-7b-chat-hf', temperature=1.0, anyscale_api_key=os.environ["ANYSCALE_API_KEY"])
+	chat = AI21(ai21_api_key=os.getenv("AI21_API_KEY"))
 	# memory = ConversationSummaryMemory(llm=chat,memory_key="chat_history",return_messages=True)
 
 	retriever = vectorstore.as_retriever()
@@ -59,7 +60,16 @@ def createNewBot(name, fileType, path, url):
 	# finalChain = ConversationalRetrievalChain.from_llm(chat, retriever=retriever, memory = memory, combine_docs_chain_kwargs={'prompt': chat_prompt})
 	finalChain = RetrievalQAWithSourcesChain.from_chain_type(chat, retriever=retriever)
 
-	botSavePath = "bots/" + name + '.json'	
+	# print(finalChain.retriever)
+	# SAVING DOESNT WORK OUT BECAUSE LANGCHAIN HAS YET TO SUPPORT THIS
+	chainSaveFolder = "bots/" + name + '/'
+	
+	botSavePath = chainSaveFolder + name + '.json'
 	finalChain.save(botSavePath)
+
+	# retrieverSavePath = chainSaveFolder + name + '_retriever.json'
+	# with open(retrieverSavePath, "w") as f:
+	# 	# json.dump(finalChain.retriever.to_json(), f, indent = 2)
+	# 	json.dump(vectorstore, f, indent = 2)
 
 	return finalChain

@@ -19,7 +19,7 @@ def validUrlOrPath(fileType, path, url):
 	
 	if fileType == 'web':
 		if url == None:
-			raise click.UsageError(message = "Valid url should be provided for document/image")
+			raise click.UsageError(message = "Valid url should be provided for web")
 		else:
 			if not validateUrl(url):
 				raise click.BadParameter('must be a valid url')
@@ -47,23 +47,23 @@ def newBot(name, fileType, path, url):
 
 	validUrlOrPath(fileType, path, url)
 
-	chatBot = createNewBot(name, fileType, path, url)
+	createNewBot(name, fileType, path, url)
 
 	print(f'Bot "{name}" created successfully!')
 
-	print(f'Ask chatbot {name} something or type "esc" to end session: ')
+	# print(f'Ask chatbot {name} something or type "esc" to end session: ')
 
-	while True:
-		query = input()
-		if query == 'esc': break
-		print()
-		print(f"Waiting for chatbot's response...")
-		# response = chatBot.run(query)
-		# print(f"""Response: {response['answer']}""")
-		answer = chatBot(query)['answer']
-		print(f"""{answer}""")
+	# while True:
+	# 	query = input()
+	# 	if query == 'esc': break
+	# 	print()
+	# 	print(f"Waiting for chatbot's response...")
+	# 	# response = chatBot.run(query)
+	# 	# print(f"""Response: {response['answer']}""")
+	# 	answer = chatBot(query)['answer']
+	# 	print(f"""{answer}""")
 
-		print(f"Your next query: ")
+	# 	print(f"Your next query: ")
 
-	print('Conversation ended!')
+	# print('Conversation ended!')
 
