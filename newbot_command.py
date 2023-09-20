@@ -1,6 +1,8 @@
 import click
 import os
 import validators
+from create_bot import *
+import keyboard
 
 def validateUrl(url):
 	if validators.url(url) == True:
@@ -13,7 +15,7 @@ def validUrlOrPath(fileType, path, url):
 			raise click.UsageError(message = "Valid path should be provided for document/image")
 		else:
 			if not os.path.isfile(path):
-				raise click.UsageError(message = "Invalid path")
+				raise click.UsageError(message = "Can't find a file with given path")
 	
 	if fileType == 'web':
 		if url == None:
@@ -45,3 +47,21 @@ def newBot(name, fileType, path, url):
 	# print(name, fileType, path, url)
 
 	validUrlOrPath(fileType, path, url)
+
+	chatBot = createNewBot(name, fileType, path, url)
+
+	print(f'Bot "{name}" created successfully!')
+
+	print(f'Ask chatbot {name} something or press ESC to end session: ')
+
+	while not keyboard.is_pressed('esc'):
+		query = input()
+	
+		print(f"Waiting for chatbot's response...")
+		answer = chatBot(query)['answer']
+
+		print(f"""Response: {answer}""")
+
+		print(f"Your next query: ")
+
+

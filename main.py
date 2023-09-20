@@ -6,5 +6,6 @@ def allCommands():
 	pass
 
 allCommands.add_command(newBot)
+
 if __name__ == "__main__":
 	allCommands()
