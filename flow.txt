@@ -1,0 +1,18 @@
+function: newBot - create another instance of the AI bot (error handling when given already exist nha)
+option:
+--create "bot name"
+--inputType "choice of pdf/png/web"
+--source "path to file"
+
+function: botInfo - tells users about info of the bot (error handling given name doesnt exist nha)
+option:
+--name "bot name"
+
+function: useBot - use the bot with the given name (error handling when given name doesnt exist nha)
+option:
+--name "bot name"
+--query "query"
+
+###
+Also implement function to save chain and load chain from json file.
+
