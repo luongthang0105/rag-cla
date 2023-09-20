@@ -11,7 +11,7 @@ def useBot(name):
 	"""
 		Use the chatbot with given name.
 	"""
-	botPath 	  = "bots/" + name + '/' + name + '.json'
+	botPath = "bots/" + name + '/' + name + '.json'
 
 	if not os.path.isfile(botPath):
 		raise click.UsageError(message = "Can't find a chatbot with given name") 
