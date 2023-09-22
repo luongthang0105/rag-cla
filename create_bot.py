@@ -11,10 +11,8 @@ from langchain.prompts.chat import (
     HumanMessagePromptTemplate,
 )
 from langchain.chains import RetrievalQAWithSourcesChain
-from langchain.chat_models import ChatAnyscale
 from langchain.llms import AI21
 
-import json
 # create a new instance of chatbot and saves it as a JSON file
 def createNewBot(name, fileType, path, url):
 	loader = None

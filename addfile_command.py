@@ -28,7 +28,7 @@ def addFile(name, fileType, path, url):
 	if fileType == 'web':
 		loader = WebBaseLoader(url)
 	elif fileType == 'doc':
-		loader = WebBaseLoader(path)
+		loader = PyPDFLoader(path)
 
 	data = loader.load()
 
